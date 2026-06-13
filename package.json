@@ -1,0 +1,38 @@
+{
+  "name": "code-review-agent",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "probot run ./dist/app-entry.js",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tukesh1/code-review-agent.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tukesh1/code-review-agent/issues"
+  },
+  "homepage": "https://github.com/Tukesh1/code-review-agent#readme",
+  "dependencies": {
+    "@actions/core": "^3.0.1",
+    "@actions/github": "^9.1.1",
+    "@anthropic-ai/sdk": "^0.104.1",
+    "@google/generative-ai": "^0.24.1",
+    "@octokit/rest": "^22.0.1",
+    "dotenv": "^17.4.2",
+    "openai": "^6.42.0",
+    "parse-diff": "^0.12.0",
+    "probot": "^14.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
+  }
+}
