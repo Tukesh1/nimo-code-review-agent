@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🤖 AI Code Review Agent
+#  AI Code Review Agent
 
 **Open-source, privacy-first, AI-powered code reviews — right inside your Pull Requests.**
 
@@ -83,6 +83,10 @@ jobs:
 
 **That's it.** Open a Pull Request and watch the bot post its review.
 
+> [!WARNING]
+> **Customizing the Bot's Name**
+> By default, using `${{ secrets.GITHUB_TOKEN }}` causes all reviews to be posted by the **`github-actions[bot]`** account. If you want the agent to explicitly post under the name **Nimo** (or your own custom bot name), you must create a dedicated GitHub account for your bot, generate a Personal Access Token from that account, and pass it into the workflow instead of the default token!
+
 ---
 
 ## 🧠 Custom Prompts
@@ -119,7 +123,7 @@ TEAM RULES:
             Check for SQL injection vulnerabilities.
 ```
 
-> 💡 **Tip:** An enterprise-grade prompt file is included at [`prompts/custom_prompt.txt`](prompts/custom_prompt.txt). You can use it as-is or as a starting point for your own rules.
+> 💡 **Tip:** A highly strict, advanced prompt file is included at [`prompts/custom_prompt.txt`](prompts/custom_prompt.txt). You can use it as-is or as a starting point for your own rules.
 
 ---
 
@@ -170,7 +174,7 @@ nimo-code-review-agent/
 │   ├── action-entry.ts     # GitHub Actions entrypoint
 │   └── app-entry.ts        # Probot / GitHub App entrypoint (optional)
 ├── prompts/
-│   └── custom_prompt.txt   # Enterprise-grade review rules (customizable)
+│   └── custom_prompt.txt   # Advanced review rules (customizable)
 ├── action.yml              # GitHub Action definition
 ├── Dockerfile              # Container for the Action runtime
 └── test.ts                 # Local testing script
