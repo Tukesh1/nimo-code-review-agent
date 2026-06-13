@@ -1,0 +1,18 @@
+TEAM CODING STANDARDS & RULES:
+
+1. Architecture & Design
+- Enforce strict separation of concerns.
+- Do not allow large monolithic functions; suggest breaking them down.
+
+2. TypeScript & Best Practices
+- Enforce strict typing. Do not allow the use of 'any'.
+- Ensure all variables follow camelCase naming conventions.
+- Prefer 'const' over 'let' wherever possible.
+
+3. Security
+- Check thoroughly for SQL injection vulnerabilities.
+- Ensure no hardcoded secrets or API keys exist in the code.
+
+4. Performance
+- Suggest optimizations if O(n^2) loops can be avoided.
+- Prevent unnecessary API calls inside loops.
