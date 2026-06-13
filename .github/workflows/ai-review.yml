@@ -10,7 +10,7 @@ jobs:
       pull-requests: write 
     steps:
       - uses: actions/checkout@v4
-      - name: AI Code Review
+      - name: Nimo AI Code Review
         uses: Tukesh1/nimo-code-review-agent@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
