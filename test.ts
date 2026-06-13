@@ -34,7 +34,7 @@ async function runTest() {
   // To test this, provide a repository and a PR number that exists
   // We will use a public PR for testing if you change these variables
   const owner = 'Tukesh1'; // Change to your GitHub username
-  const repo = 'code-review-agent'; // Change to a repo where you have an open PR
+  const repo = 'nimo-code-review-agent'; // Change to a repo where you have an open PR
   const pullNumber = 1; // Change to an actual PR number in that repo
 
   console.log(`Starting Local Test Run against ${owner}/${repo}#${pullNumber}`);

@@ -4,5 +4,5 @@ set -e
 echo "Starting AI Code Review Agent..."
 echo "Provider: $AI_PROVIDER"
 
-npx tsc
-node dist/action-entry.js
+# Run the pre-compiled script from the /app directory
+node /app/dist/action-entry.js

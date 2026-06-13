@@ -10,6 +10,9 @@ RUN npm install
 
 COPY tsconfig.json ./
 COPY src/ ./src/
+
+RUN npx tsc
+
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
