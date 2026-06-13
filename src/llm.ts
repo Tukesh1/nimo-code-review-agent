@@ -6,6 +6,7 @@ export interface LLMConfig {
   provider: 'openai' | 'gemini' | 'claude';
   apiKey: string;
   model?: string;
+  customPrompt?: string;
 }
 
 export interface ReviewResponse {
@@ -39,6 +40,9 @@ DO NOT output any markdown blocks or text outside the JSON. Return only the raw 
 
 export async function generateReview(diff: string, config: LLMConfig): Promise<ReviewResponse | null> {
   const prompt = `Review the following code diff:\n\n${diff}`;
+  const finalSystemPrompt = config.customPrompt 
+    ? `${SYSTEM_PROMPT}\n\nAdditional custom instructions from the user:\n${config.customPrompt}` 
+    : SYSTEM_PROMPT;
 
   let jsonStr = '';
 
@@ -48,7 +52,7 @@ export async function generateReview(diff: string, config: LLMConfig): Promise<R
       const response = await openai.chat.completions.create({
         model: config.model || 'gpt-4o',
         messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'system', content: finalSystemPrompt },
           { role: 'user', content: prompt }
         ],
         response_format: { type: 'json_object' }
@@ -57,14 +61,14 @@ export async function generateReview(diff: string, config: LLMConfig): Promise<R
     } else if (config.provider === 'gemini') {
       const genAI = new GoogleGenerativeAI(config.apiKey);
       const model = genAI.getGenerativeModel({ model: config.model || 'gemini-2.5-pro' });
-      const response = await model.generateContent([SYSTEM_PROMPT, prompt]);
+      const response = await model.generateContent([finalSystemPrompt, prompt]);
       jsonStr = response.response.text();
     } else if (config.provider === 'claude') {
       const anthropic = new Anthropic({ apiKey: config.apiKey });
       const response = await anthropic.messages.create({
         model: config.model || 'claude-3-5-sonnet-20240620',
         max_tokens: 4096,
-        system: SYSTEM_PROMPT,
+        system: finalSystemPrompt,
         messages: [
           { role: 'user', content: prompt }
         ]

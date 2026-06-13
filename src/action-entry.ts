@@ -27,7 +27,8 @@ async function run() {
     }
 
     const model = core.getInput('ai_model') || process.env.AI_MODEL || undefined;
-    const llmConfig: LLMConfig = { provider, apiKey, model };
+    const customPrompt = core.getInput('custom_prompt') || process.env.CUSTOM_PROMPT || undefined;
+    const llmConfig: LLMConfig = { provider, apiKey, model, customPrompt };
     const octokit = new Octokit({ auth: token });
 
     const context = github.context;

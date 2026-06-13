@@ -27,7 +27,8 @@ export = (app: Probot) => {
     }
 
     const model = process.env.AI_MODEL || undefined;
-    const llmConfig: LLMConfig = { provider, apiKey, model };
+    const customPrompt = process.env.CUSTOM_PROMPT || undefined;
+    const llmConfig: LLMConfig = { provider, apiKey, model, customPrompt };
 
     // We can cast the probot octokit client, but creating a fresh Octokit with the token is sometimes easier
     // Probot's context.octokit is already authenticated as the App for this repo.
