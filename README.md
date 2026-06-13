@@ -24,6 +24,12 @@ An automated code reviewer that integrates directly into your GitHub workflow. E
 
 Unlike SaaS tools (CodeRabbit, Bito, Codacy), **your code never leaves your GitHub Actions runner**. You bring your own API key, you control the model, and you can read every line of the source.
 
+<br />
+
+![Nimo Code Review Agent in Action](assets/test_agent.png)
+
+*(**Note:** In the screenshot above, the agent posts under the username `Tukesh1`. This is because it was run locally using a Personal Access Token. When you deploy it via GitHub Actions, it will automatically post as `github-actions[bot]` unless you supply a custom bot token!)*
+
 ---
 
 ## ✨ Features
@@ -193,12 +199,8 @@ cd nimo-code-review-agent
 npm install
 
 # 2. Create a .env file
-cat > .env << 'EOF'
-GITHUB_TOKEN=ghp_your_token_here
-AI_PROVIDER=gemini
-AI_MODEL=gemini-2.0-flash
-GEMINI_API_KEY=your_gemini_key
-EOF
+cp .env.example .env
+# Open .env and add your GITHUB_TOKEN and API key
 
 # 3. Edit test.ts to point to your PR (owner, repo, pullNumber)
 
