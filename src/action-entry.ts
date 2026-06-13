@@ -3,6 +3,8 @@ import * as github from '@actions/github';
 import { Octokit } from '@octokit/rest';
 import { processReview } from './reviewer';
 import { LLMConfig } from './llm';
+import * as fs from 'fs';
+import * as path from 'path';
 
 async function run() {
   try {
@@ -27,7 +29,20 @@ async function run() {
     }
 
     const model = core.getInput('ai_model') || process.env.AI_MODEL || undefined;
-    const customPrompt = core.getInput('custom_prompt') || process.env.CUSTOM_PROMPT || undefined;
+    let customPrompt = core.getInput('custom_prompt') || process.env.CUSTOM_PROMPT || undefined;
+    const customPromptFile = core.getInput('custom_prompt_file') || process.env.CUSTOM_PROMPT_FILE || undefined;
+    
+    if (customPromptFile) {
+      const workspace = process.env.GITHUB_WORKSPACE || process.cwd();
+      const filePath = path.join(workspace, customPromptFile);
+      if (fs.existsSync(filePath)) {
+        const fileContent = fs.readFileSync(filePath, 'utf-8');
+        customPrompt = customPrompt ? `${customPrompt}\n\n${fileContent}` : fileContent;
+      } else {
+        console.warn(`Custom prompt file not found at: ${filePath}`);
+      }
+    }
+
     const llmConfig: LLMConfig = { provider, apiKey, model, customPrompt };
     const octokit = new Octokit({ auth: token });
 
