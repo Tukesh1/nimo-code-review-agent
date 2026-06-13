@@ -1,7 +1,7 @@
 import { Octokit } from '@octokit/rest';
 import parseDiff from 'parse-diff';
-import { getPRDiff, getPRDetails, createReviewComment, createSummaryComment } from './github';
-import { generateReview, LLMConfig } from './llm';
+import { getPRDiff, getPRDetails, createReviewComment, createSummaryComment } from './github.js';
+import { generateReview, LLMConfig } from './llm.js';
 
 export async function processReview(
   octokit: Octokit,

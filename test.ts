@@ -1,7 +1,7 @@
 import { Octokit } from '@octokit/rest';
 import * as dotenv from 'dotenv';
-import { processReview } from './src/reviewer';
-import { LLMConfig } from './src/llm';
+import { processReview } from './src/reviewer.js';
+import { LLMConfig } from './src/llm.js';
 
 dotenv.config();
 

@@ -1,8 +1,8 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { Octokit } from '@octokit/rest';
-import { processReview } from './reviewer';
-import { LLMConfig } from './llm';
+import { processReview } from './reviewer.js';
+import { LLMConfig } from './llm.js';
 import * as fs from 'fs';
 import * as path from 'path';
 

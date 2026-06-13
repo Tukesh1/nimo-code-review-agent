@@ -1,9 +1,9 @@
 import { Probot } from 'probot';
 import { Octokit } from '@octokit/rest';
-import { processReview } from './reviewer';
-import { LLMConfig } from './llm';
+import { processReview } from './reviewer.js';
+import { LLMConfig } from './llm.js';
 
-export = (app: Probot) => {
+export default (app: Probot) => {
   app.on(['pull_request.opened', 'pull_request.synchronize'], async (context) => {
     const pullRequest = context.payload.pull_request;
     const owner = context.repo().owner;
