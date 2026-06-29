@@ -100,12 +100,6 @@ jobs:
 
 **That's it.** Open a Pull Request and watch the bot post its review.
 
-> [!WARNING]
-> **Customizing the Bot's Name**
-> By default, using `${{ secrets.GITHUB_TOKEN }}` causes all reviews to be posted by the **`github-actions[bot]`** account. If you want the agent to explicitly post under the name **Nimo** (or your own custom bot name), you must create a dedicated GitHub account for your bot, generate a Personal Access Token from that account, and pass it into the workflow instead of the default token!
-
----
-
 ## 🧠 Custom Prompts
 
 This is where the agent becomes truly powerful. You can teach it your team's exact coding standards.
