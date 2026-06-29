@@ -94,7 +94,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           ai_provider: 'openrouter'
-          ai_model: 'qwen/qwen-2.5-coder-32b-instruct:free'
+          ai_model: 'meta-llama/llama-3.1-8b-instruct:free'
           openrouter_api_key: ${{ secrets.OPENROUTER_API_KEY }}
 ```
 
@@ -144,7 +144,7 @@ TEAM RULES:
 |---|---|---|
 | `github_token` | GitHub token for posting comments. Use `${{ secrets.GITHUB_TOKEN }}`. | *Required* |
 | `ai_provider` | AI service: `gemini`, `openai`, `claude`, or `openrouter`. | `gemini` |
-| `ai_model` | Model ID (e.g. `gemini-2.0-flash`, `gpt-4o`, `claude-3-5-sonnet-20240620`, `qwen/qwen-2.5-coder-32b-instruct:free`). | `gemini-2.5-pro` |
+| `ai_model` | Model ID (e.g. `gemini-2.0-flash`, `gpt-4o`, `claude-3-5-sonnet-20240620`, `meta-llama/llama-3.1-8b-instruct:free`). | `gemini-2.5-pro` |
 | `custom_prompt` | Inline additional instructions for the AI. | — |
 | `custom_prompt_file` | Path to a `.txt` file in your repo with review rules. | — |
 | `gemini_api_key` | API key for Google Gemini. | — |

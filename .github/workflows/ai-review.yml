@@ -37,7 +37,7 @@ jobs:
           
           # AI Configuration
           ai_provider: 'openrouter'
-          ai_model: 'qwen/qwen-2.5-coder-32b-instruct:free'
+          ai_model: 'meta-llama/llama-3.1-8b-instruct:free'
           openrouter_api_key: ${{ secrets.OPENROUTER_API_KEY }}
           
           # (Optional) Inject your team's specific coding rules

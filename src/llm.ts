@@ -38,6 +38,12 @@ Only comment on lines that were actually added or modified in the diff.
 If there are no issues, return an empty array for inlineComments.
 DO NOT output any markdown blocks or text outside the JSON. Return only the raw JSON string.`;
 
+function cleanJSONString(str: string): string {
+  // Remove trailing commas before closing braces or brackets, a common LLM mistake
+  return str.replace(/,\s*([\]}])/g, '$1');
+}
+
+
 export async function generateReview(diff: string, config: LLMConfig): Promise<ReviewResponse | null> {
   const prompt = `Review the following code diff:\n\n${diff}`;
   const finalSystemPrompt = config.customPrompt 
@@ -53,7 +59,7 @@ export async function generateReview(diff: string, config: LLMConfig): Promise<R
         ...(config.provider === 'openrouter' && { baseURL: 'https://openrouter.ai/api/v1' })
       });
       
-      const defaultModel = config.provider === 'openrouter' ? 'qwen/qwen-2.5-coder-32b-instruct:free' : 'gpt-4o';
+      const defaultModel = config.provider === 'openrouter' ? 'meta-llama/llama-3.1-8b-instruct:free' : 'gpt-4o';
       
       const requestOptions: any = {
         model: config.model || defaultModel,
@@ -93,9 +99,11 @@ export async function generateReview(diff: string, config: LLMConfig): Promise<R
       jsonStr = match[0];
     }
     
+    jsonStr = cleanJSONString(jsonStr);
     return JSON.parse(jsonStr) as ReviewResponse;
   } catch (error) {
     console.error('Error generating review from LLM:', error);
+    console.error('Raw LLM Output was:', jsonStr);
     return null;
   }
 }
