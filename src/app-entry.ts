@@ -10,7 +10,7 @@ export default (app: Probot) => {
     const repo = context.repo().repo;
     const pullNumber = pullRequest.number;
 
-    const provider = (process.env.AI_PROVIDER || 'gemini') as 'gemini' | 'openai' | 'claude';
+    const provider = (process.env.AI_PROVIDER || 'gemini') as 'gemini' | 'openai' | 'claude' | 'openrouter';
     let apiKey = '';
 
     if (provider === 'gemini') {
@@ -19,6 +19,8 @@ export default (app: Probot) => {
       apiKey = process.env.OPENAI_API_KEY || '';
     } else if (provider === 'claude') {
       apiKey = process.env.CLAUDE_API_KEY || '';
+    } else if (provider === 'openrouter') {
+      apiKey = process.env.OPENROUTER_API_KEY || '';
     }
 
     if (!apiKey) {

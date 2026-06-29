@@ -12,7 +12,7 @@ async function runTest() {
     process.exit(1);
   }
 
-  const provider = (process.env.AI_PROVIDER || 'gemini') as 'gemini' | 'openai' | 'claude';
+  const provider = (process.env.AI_PROVIDER || 'gemini') as 'gemini' | 'openai' | 'claude' | 'openrouter';
   let apiKey = '';
 
   if (provider === 'gemini') {
@@ -21,6 +21,8 @@ async function runTest() {
     apiKey = process.env.OPENAI_API_KEY || '';
   } else if (provider === 'claude') {
     apiKey = process.env.CLAUDE_API_KEY || '';
+  } else if (provider === 'openrouter') {
+    apiKey = process.env.OPENROUTER_API_KEY || '';
   }
 
   if (!apiKey) {
@@ -35,7 +37,7 @@ async function runTest() {
   // We will use a public PR for testing if you change these variables
   const owner = 'Tukesh1'; // Change to your GitHub username
   const repo = 'nimo-code-review-agent'; // Change to a repo where you have an open PR
-  const pullNumber = 1; // Change to an actual PR number in that repo
+  const pullNumber = 3; // Change to an actual PR number in that repo
 
   console.log(`Starting Local Test Run against ${owner}/${repo}#${pullNumber}`);
 

@@ -1,18 +1,44 @@
 name: AI Code Review
+
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, reopened]
+    # Optional: Only run if code files change (saves API tokens!)
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.txt'
+      - 'docs/**'
+
+# Cancel in-progress reviews if the developer pushes a new commit quickly
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   review:
+    name: Nimo Agent
     runs-on: ubuntu-latest
+    
+    # Only run on actual PRs, skip Draft PRs
+    if: github.event.pull_request.draft == false
+    
     permissions:
       contents: read
-      pull-requests: write 
+      pull-requests: write # Required so the bot can post comments
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Nimo AI Code Review
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run Nimo Code Review
         uses: Tukesh1/nimo-code-review-agent@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          ai_provider: 'gemini'
-          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          
+          # AI Configuration
+          ai_provider: 'openrouter'
+          ai_model: 'qwen/qwen-2.5-coder-32b-instruct:free'
+          openrouter_api_key: ${{ secrets.OPENROUTER_API_KEY }}
+          
+          # (Optional) Inject your team's specific coding rules
+          # custom_prompt_file: 'prompts/custom_prompt.txt'

@@ -13,7 +13,7 @@ async function run() {
       throw new Error('GITHUB_TOKEN is missing');
     }
 
-    const provider = (core.getInput('ai_provider') || process.env.AI_PROVIDER || 'gemini') as 'gemini' | 'openai' | 'claude';
+    const provider = (core.getInput('ai_provider') || process.env.AI_PROVIDER || 'gemini') as 'gemini' | 'openai' | 'claude' | 'openrouter';
     let apiKey = '';
 
     if (provider === 'gemini') {
@@ -22,6 +22,8 @@ async function run() {
       apiKey = core.getInput('openai_api_key') || process.env.OPENAI_API_KEY || '';
     } else if (provider === 'claude') {
       apiKey = core.getInput('claude_api_key') || process.env.CLAUDE_API_KEY || '';
+    } else if (provider === 'openrouter') {
+      apiKey = core.getInput('openrouter_api_key') || process.env.OPENROUTER_API_KEY || '';
     }
 
     if (!apiKey) {

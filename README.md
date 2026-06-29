@@ -19,7 +19,7 @@
 An automated code reviewer that integrates directly into your GitHub workflow. Every time a Pull Request is opened or updated, this agent:
 
 1. **Reads** the code diff via GitHub API.
-2. **Sends** it to an AI model of your choice (Gemini, GPT, Claude).
+2. **Sends** it to an AI model of your choice (Gemini, GPT, Claude, or OpenRouter).
 3. **Posts** a detailed summary comment and targeted inline comments on the exact lines that need attention.
 
 Unlike SaaS tools (CodeRabbit, Bito, Codacy), **your code never leaves your GitHub Actions runner**. You bring your own API key, you control the model, and you can read every line of the source.
@@ -36,7 +36,7 @@ Unlike SaaS tools (CodeRabbit, Bito, Codacy), **your code never leaves your GitH
 
 | Feature | Description |
 |---|---|
-| 🧠 **Multi-Model** | Supports Google Gemini, OpenAI GPT, and Anthropic Claude out of the box. |
+| 🧠 **Multi-Model** | Supports Google Gemini, OpenAI GPT, Anthropic Claude, and OpenRouter out of the box. |
 | 📝 **Inline Comments** | Posts feedback on the exact lines where issues are found. |
 | 📋 **PR Summaries** | Generates a high-level summary of the entire Pull Request. |
 | 🎯 **Custom Prompts** | Teach the AI your team's coding standards via a simple text file. |
@@ -56,6 +56,7 @@ Go to your repository → `Settings` → `Secrets and variables` → `Actions` �
 | `GEMINI_API_KEY` | Your Google AI API key |
 | *(or)* `OPENAI_API_KEY` | Your OpenAI API key |
 | *(or)* `CLAUDE_API_KEY` | Your Anthropic API key |
+| *(or)* `OPENROUTER_API_KEY` | Your OpenRouter API key |
 
 ### Step 2 — Create the workflow file
 
@@ -66,11 +67,21 @@ name: AI Code Review
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, reopened]
+    # Optional: Ignore markdown changes to save tokens
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.txt'
+
+# Cancel in-progress reviews if new commits are pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   review:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
     permissions:
       contents: read
       pull-requests: write
@@ -82,9 +93,9 @@ jobs:
         uses: Tukesh1/nimo-code-review-agent@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          ai_provider: 'gemini'
-          ai_model: 'gemini-2.0-flash'
-          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          ai_provider: 'openrouter'
+          ai_model: 'qwen/qwen-2.5-coder-32b-instruct:free'
+          openrouter_api_key: ${{ secrets.OPENROUTER_API_KEY }}
 ```
 
 **That's it.** Open a Pull Request and watch the bot post its review.
@@ -138,13 +149,14 @@ TEAM RULES:
 | Input | Description | Default |
 |---|---|---|
 | `github_token` | GitHub token for posting comments. Use `${{ secrets.GITHUB_TOKEN }}`. | *Required* |
-| `ai_provider` | AI service: `gemini`, `openai`, or `claude`. | `gemini` |
-| `ai_model` | Model ID (e.g. `gemini-2.0-flash`, `gpt-4o`, `claude-3-5-sonnet-20240620`). | `gemini-2.5-pro` |
+| `ai_provider` | AI service: `gemini`, `openai`, `claude`, or `openrouter`. | `gemini` |
+| `ai_model` | Model ID (e.g. `gemini-2.0-flash`, `gpt-4o`, `claude-3-5-sonnet-20240620`, `qwen/qwen-2.5-coder-32b-instruct:free`). | `gemini-2.5-pro` |
 | `custom_prompt` | Inline additional instructions for the AI. | — |
 | `custom_prompt_file` | Path to a `.txt` file in your repo with review rules. | — |
 | `gemini_api_key` | API key for Google Gemini. | — |
 | `openai_api_key` | API key for OpenAI. | — |
 | `claude_api_key` | API key for Anthropic Claude. | — |
+| `openrouter_api_key` | API key for OpenRouter. | — |
 
 ---
 
@@ -174,7 +186,7 @@ sequenceDiagram
 ```
 nimo-code-review-agent/
 ├── src/
-│   ├── llm.ts             # Multi-provider AI adapter (Gemini, OpenAI, Claude)
+│   ├── llm.ts             # Multi-provider AI adapter (Gemini, OpenAI, Claude, OpenRouter)
 │   ├── reviewer.ts         # Core orchestrator: diff parsing, filtering, review flow
 │   ├── github.ts           # GitHub API wrapper (fetch PR, post comments)
 │   ├── action-entry.ts     # GitHub Actions entrypoint
@@ -205,7 +217,7 @@ cp .env.example .env
 # 3. Edit test.ts to point to your PR (owner, repo, pullNumber)
 
 # 4. Run!
-npx ts-node test.ts
+npx tsx test.ts
 ```
 
 ---
