@@ -3,7 +3,7 @@ import OpenAI from 'openai';
 import Anthropic from '@anthropic-ai/sdk';
 
 export interface LLMConfig {
-  provider: 'openai' | 'gemini' | 'claude';
+  provider: 'openai' | 'gemini' | 'claude' | 'openrouter';
   apiKey: string;
   model?: string;
   customPrompt?: string;
@@ -47,16 +47,27 @@ export async function generateReview(diff: string, config: LLMConfig): Promise<R
   let jsonStr = '';
 
   try {
-    if (config.provider === 'openai') {
-      const openai = new OpenAI({ apiKey: config.apiKey });
-      const response = await openai.chat.completions.create({
-        model: config.model || 'gpt-4o',
+    if (config.provider === 'openai' || config.provider === 'openrouter') {
+      const openai = new OpenAI({ 
+        apiKey: config.apiKey,
+        ...(config.provider === 'openrouter' && { baseURL: 'https://openrouter.ai/api/v1' })
+      });
+      
+      const defaultModel = config.provider === 'openrouter' ? 'qwen/qwen-2.5-coder-32b-instruct:free' : 'gpt-4o';
+      
+      const requestOptions: any = {
+        model: config.model || defaultModel,
         messages: [
           { role: 'system', content: finalSystemPrompt },
           { role: 'user', content: prompt }
-        ],
-        response_format: { type: 'json_object' }
-      });
+        ]
+      };
+
+      if (config.provider === 'openai') {
+        requestOptions.response_format = { type: 'json_object' };
+      }
+
+      const response = await openai.chat.completions.create(requestOptions);
       jsonStr = response.choices[0].message.content || '{}';
     } else if (config.provider === 'gemini') {
       const genAI = new GoogleGenerativeAI(config.apiKey);
